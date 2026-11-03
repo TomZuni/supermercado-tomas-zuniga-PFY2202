@@ -12,11 +12,12 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "bootstrap": "^5.3.8",
+    "@tailwindcss/vite": "^4.3.4",
     "bootstrap-icons": "^1.13.2",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "react-router-dom": "^7.18.4"
+    "react-router-dom": "^7.18.4",
+    "tailwindcss": "^4.3.4"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^6.1.2",

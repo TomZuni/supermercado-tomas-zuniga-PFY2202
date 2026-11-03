@@ -7,13 +7,15 @@ import MenuInferior from './MenuInferior.jsx'
 
 // Título de la pestaña del navegador según la ruta
 const TITULOS = {
-  '/': 'Inventario',
+  '/': 'Inicio',
+  '/articulos': 'Artículos',
+  '/agregar-articulo': 'Agregar artículo',
   '/quienes-somos': 'Quiénes somos',
   '/preguntas-frecuentes': 'Preguntas frecuentes',
 }
 
 export default function Layout() {
-  const { pathname } = useLocation() // ruta actual, por ejemplo "/quienes-somos"
+  const { pathname } = useLocation() // ruta actual, por ejemplo "/articulos"
 
   // Cada vez que cambia la ruta: se sube al inicio de la página y se actualiza el título.
   useEffect(() => {
@@ -22,12 +24,12 @@ export default function Layout() {
   }, [pathname])
 
   return (
-    <>
+    <div className="min-h-screen bg-fondo text-slate-800">
       <Encabezado />
-      <main className="contenedor-principal container py-4">
+      <main className="mx-auto w-full max-w-6xl px-4 py-6 pb-28">
         <Outlet />
       </main>
       <MenuInferior />
-    </>
+    </div>
   )
 }

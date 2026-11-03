@@ -30,7 +30,7 @@ export default function Inicio({ inventario }) {
         </button>
       </div>
 
-      <ResumenInventario productos={productos} />
+      <ResumenInventario articulos={productos} />
 
       <div className="row g-4">
         <div className="col-lg-8">

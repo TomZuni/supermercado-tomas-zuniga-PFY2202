@@ -1,106 +1,15 @@
 /* =====================================================
-   Supermercado Central – estilos propios sobre Bootstrap
+   Supermercado Central – estilos
+   Se usa Tailwind CSS: casi todo el diseño se escribe con
+   clases de utilidad directamente en los componentes.
+   Aquí solo se importa Tailwind y se define la paleta de la marca.
    ===================================================== */
+@import "tailwindcss";
 
-:root {
-  --verde: #1f7a4d;
-  --verde-oscuro: #155c3a;
-  --verde-claro: #e6f3ec;
-  --fondo: #f4f7f5;
-  --alto-menu: 68px;
-}
-
-body {
-  background: var(--fondo);
-  color: #1d2b24;
-}
-
-/* ---------- Encabezado ---------- */
-.encabezado {
-  background: var(--verde);
-  color: #fff;
-  padding: .85rem 0;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-.encabezado-titulo { font-weight: 700; line-height: 1.1; }
-.encabezado-sub { opacity: .85; }
-
-/* Deja espacio abajo para que el menú fijo no tape el contenido */
-.contenedor-principal { padding-bottom: calc(var(--alto-menu) + 1.5rem) !important; max-width: 1100px; }
-
-/* ---------- Menú inferior ---------- */
-.menu-inferior {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: var(--alto-menu);
-  background: #fff;
-  border-top: 1px solid #d5ddd8;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, .06);
-  z-index: 20;
-}
-.menu-lista {
-  display: flex;
-  justify-content: space-around;
-  align-items: stretch;
-  height: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 0;
-  list-style: none;
-}
-.menu-lista li { flex: 1; }
-.menu-item {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  color: #6b7a72;
-  text-decoration: none;
-  font-size: .78rem;
-  font-weight: 600;
-  border-top: 3px solid transparent;
-}
-.menu-item i { font-size: 1.35rem; }
-.menu-item:hover { color: var(--verde); }
-.menu-item.activo { color: var(--verde); border-top-color: var(--verde); background: var(--verde-claro); }
-
-/* ---------- Tarjetas y acordeón ---------- */
-.tarjeta {
-  background: #fff;
-  border: 1px solid #dbe3de;
-  border-radius: 12px;
-  padding: 1.1rem 1.25rem;
-}
-.icono-valor { font-size: 2rem; color: var(--verde); }
-
-.acordeon-item { background: #fff; border: 1px solid #dbe3de; border-radius: 10px; margin-bottom: .6rem; overflow: hidden; }
-.acordeon-boton {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  padding: .9rem 1.1rem;
-  background: none;
-  border: 0;
-  text-align: left;
-  font-weight: 600;
-  color: inherit;
-}
-.acordeon-boton[aria-expanded="true"] { background: var(--verde-claro); color: var(--verde-oscuro); }
-.acordeon-respuesta { padding: .9rem 1.1rem; border-top: 1px solid #dbe3de; color: #44534b; }
-
-/* ---------- Botones de la marca ---------- */
-.btn-success { --bs-btn-bg: var(--verde); --bs-btn-border-color: var(--verde); --bs-btn-hover-bg: var(--verde-oscuro); --bs-btn-hover-border-color: var(--verde-oscuro); --bs-btn-active-bg: var(--verde-oscuro); }
-
-/* ---------- Tabla en móvil ---------- */
-@media (max-width: 575.98px) {
-  .table > :not(caption) > * > * { padding: .5rem .35rem; }
-  .table { font-size: .9rem; }
+@theme {
+  --color-verde-50: #e6f3ec;
+  --color-verde-100: #cfe8da;
+  --color-verde-600: #1f7a4d;
+  --color-verde-700: #155c3a;
+  --color-fondo: #f4f7f5;
 }
