@@ -1,58 +1,62 @@
-// Página principal (home): gestión del inventario.
-// Recibe el inventario por props desde App.jsx. Aquí solo vive el estado de los
-// filtros (búsqueda y categoría), que es propio de esta pantalla.
-import { useState } from 'react'
+// Página principal (home): panel con el resumen del inventario.
+// Lee el estado global: cualquier artículo agregado o modificado se refleja aquí.
+import { Link } from 'react-router-dom'
 import ResumenInventario from '../components/ResumenInventario.jsx'
-import TablaInventario from '../components/TablaInventario.jsx'
-import FormularioProducto from '../components/FormularioProducto.jsx'
-import { CATEGORIAS } from '../data/productos.js'
+import useArticulos from '../hooks/useArticulos.js'
+import { estadoStock } from '../utils.js'
+import { boton, botonSecundario, tarjeta } from '../estilos.js'
 
-export default function Inicio({ inventario }) {
-  const { productos, agregar, eliminar, cambiarStock, restablecer } = inventario
-  const [busqueda, setBusqueda] = useState('')
-  const [categoria, setCategoria] = useState('Todas')
+export default function Inicio() {
+  const { articulos } = useArticulos()
 
-  // Datos derivados: la lista que se muestra depende de los filtros.
-  const texto = busqueda.trim().toLowerCase()
-  const filtrados = productos.filter(
-    (p) => p.nombre.toLowerCase().includes(texto) && (categoria === 'Todas' || p.categoria === categoria),
-  )
+  // Artículos que necesitan reposición (stock igual o menor al mínimo)
+  const conStockBajo = articulos.filter((a) => a.stock <= a.stockMinimo)
 
   return (
     <section aria-labelledby="tituloInicio">
-      <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-        <div>
-          <h1 id="tituloInicio" className="h3 mb-0">Inventario del supermercado</h1>
-          <p className="text-secondary mb-0">Controla los productos y avisa cuando el stock está bajo.</p>
-        </div>
-        <button type="button" className="btn btn-sm btn-outline-secondary" onClick={restablecer}>
-          <i className="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Restablecer inventario
-        </button>
-      </div>
+      <h1 id="tituloInicio" className="text-2xl font-bold">Panel de inventario</h1>
+      <p className="mt-1 mb-6 text-slate-600">Resumen del estado del inventario del supermercado.</p>
 
-      <ResumenInventario articulos={productos} />
+      <ResumenInventario articulos={articulos} />
 
-      <div className="row g-4">
-        <div className="col-lg-8">
-          <div className="tarjeta">
-            <div className="row g-2 mb-3">
-              <div className="col-sm-7">
-                <label htmlFor="busqueda" className="visually-hidden">Buscar producto</label>
-                <input id="busqueda" type="search" className="form-control" placeholder="Buscar producto..." value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
-              </div>
-              <div className="col-sm-5">
-                <label htmlFor="filtroCategoria" className="visually-hidden">Filtrar por categoría</label>
-                <select id="filtroCategoria" className="form-select" value={categoria} onChange={(e) => setCategoria(e.target.value)}>
-                  <option value="Todas">Todas las categorías</option>
-                  {CATEGORIAS.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-            </div>
-            <TablaInventario productos={filtrados} onCambiarStock={cambiarStock} onEliminar={eliminar} />
-          </div>
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className={`${tarjeta} lg:col-span-2`}>
+          <h2 className="mb-3 text-lg font-semibold">
+            <i className="bi bi-exclamation-triangle-fill text-amber-500"></i> Artículos por reponer
+          </h2>
+
+          {/* Renderizado condicional: lista de alertas o mensaje de "todo en orden" */}
+          {conStockBajo.length === 0 ? (
+            <p className="text-slate-600">Todo en orden: ningún artículo tiene stock bajo.</p>
+          ) : (
+            <ul className="divide-y divide-slate-100">
+              {conStockBajo.map((articulo) => {
+                const estado = estadoStock(articulo)
+                return (
+                  <li key={articulo.id} className="flex items-center justify-between gap-3 py-2.5">
+                    <div>
+                      <p className="font-semibold">{articulo.nombre}</p>
+                      <p className="text-sm text-slate-500">{articulo.marca} · {articulo.tipo}</p>
+                    </div>
+                    <div className="text-right">
+                      <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${estado.clase}`}>{estado.texto}</span>
+                      <p className="mt-1 text-xs text-slate-500">{articulo.stock} de {articulo.stockMinimo} mínimo</p>
+                    </div>
+                  </li>
+                )
+              })}
+            </ul>
+          )}
         </div>
-        <div className="col-lg-4">
-          <FormularioProducto onAgregar={agregar} />
+
+        <div className={`${tarjeta} flex flex-col gap-3`}>
+          <h2 className="text-lg font-semibold">Accesos rápidos</h2>
+          <Link to="/agregar-articulo" className={boton}>
+            <i className="bi bi-plus-circle" aria-hidden="true"></i> Agregar artículo
+          </Link>
+          <Link to="/articulos" className={botonSecundario}>
+            <i className="bi bi-table" aria-hidden="true"></i> Ver todos los artículos
+          </Link>
         </div>
       </div>
     </section>
