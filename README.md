@@ -1,28 +1,53 @@
 # Supermercado Central – Gestión de inventario
 
-**Curso:** Desarrollo Frontend II (PFY2202) · Duoc UC · Semana 1 – Actividad formativa 1
+**Curso:** Desarrollo Frontend II (PFY2202) · Duoc UC
+**Actividades:** Formativa 1 (React Router) y Formativa 2 (gestión de estado y framework CSS)
 **Alumno:** Tomás Zúñiga
 **Repositorio:** `supermercado-tomas-zuniga-PFY2202`
 
-Sitio web de gestión de inventario para un supermercado, desarrollado con **React** y **React Router**. Tiene una página principal (home) con el inventario y un **menú inferior** que permite navegar a otras dos páginas sin recargar el sitio.
+Sitio web de gestión de inventario para un supermercado, hecho con **React**, **React Router**, **estado global con Context API** y **Tailwind CSS**.
 
 ## Páginas y rutas
 
-| Ruta | Página | Contenido |
-|---|---|---|
-| `/` | **Inicio** | Inventario: resumen, tabla con búsqueda y filtro, ajuste de stock, eliminar y formulario para agregar productos. |
-| `/quienes-somos` | **Quiénes somos** | Misión, visión y valores del supermercado. |
-| `/preguntas-frecuentes` | **Preguntas frecuentes** | Acordeón con preguntas sobre el uso del inventario. |
-| cualquier otra | **Página no encontrada** | Mensaje de error con enlace para volver al inicio. |
+| Ruta | Página | Menú | Contenido |
+|---|---|---|---|
+| `/` | **Inicio** | Inferior | Panel con el resumen del inventario y los artículos por reponer. |
+| `/agregar-articulo` | **Agregar artículo** | Superior | Formulario para ingresar un artículo nuevo al inventario. |
+| `/articulos` | **Artículos** | Superior | Tabla con todos los artículos del inventario. |
+| `/quienes-somos` | **Quiénes somos** | Inferior | Misión, visión y valores. |
+| `/preguntas-frecuentes` | **Preguntas frecuentes** | Inferior | Acordeón con preguntas sobre el uso del inventario. |
+| cualquier otra | **Página no encontrada** | — | Mensaje de error con enlace al inicio. |
 
-## Cómo se usa React Router
+El sitio tiene **dos menús**: el **inferior** (Formativa 1) y el **menú superior nuevo** (Formativa 2), que lleva a las páginas de agregar y listar artículos.
 
-- `main.jsx`: envuelve la aplicación en `<HashRouter>`.
-- `App.jsx`: define las rutas con `<Routes>` y `<Route>`, incluida la ruta comodín `*` para páginas inexistentes.
-- `Layout.jsx`: estructura común con `<Outlet />`, que es donde se dibuja la página de la ruta actual. También usa `useLocation` para subir al inicio de la página y cambiar el título de la pestaña en cada navegación.
-- `MenuInferior.jsx`: usa `<NavLink>`, que cambia de página sin recargar y marca la opción activa.
+## Navegación con React Router
 
-Se usa `HashRouter` (rutas con `#`, por ejemplo `/#/quienes-somos`) para que el sitio funcione en GitHub Pages incluso al recargar una página interna.
+- `main.jsx`: envuelve la app en `<HashRouter>` (rutas con `#`, para que funcione al recargar en GitHub Pages).
+- `App.jsx`: define las rutas con `<Routes>` y `<Route>`, incluida la ruta comodín `*`.
+- `Layout.jsx`: estructura común con `<Outlet />`; usa `useLocation` para actualizar el título de la pestaña.
+- `MenuSuperior.jsx` y `MenuInferior.jsx`: usan `<NavLink>` y marcan la opción activa.
+- `AgregarArticulo.jsx`: usa `useNavigate` para redirigir a la tabla al guardar y le envía un aviso con el estado de la navegación.
+
+## Estado global (Context API + useReducer)
+
+La lista de artículos vive en un **estado global** definido en `src/context/ArticulosContext.jsx`:
+
+- `useReducer` concentra todas las modificaciones en una sola función (`reducer`) con las acciones `agregar`, `eliminar`, `cambiar_stock` y `restablecer`.
+- `ArticulosProvider` envuelve la aplicación en `App.jsx` y comparte la lista y las acciones con todos los componentes.
+- `hooks/useArticulos.js` es el hook que usan las páginas para leer o modificar el estado.
+- Cada artículo guarda: **nombre, marca, tipo de producto**, precio, stock y stock mínimo.
+- Con `useEffect` la lista se guarda en el navegador, de modo que se mantiene al recargar.
+
+Como el estado es global, un artículo agregado en **Agregar artículo** aparece de inmediato en **Artículos** y en el resumen de **Inicio**.
+
+## Framework CSS: Tailwind CSS
+
+Se usa **Tailwind CSS 4** con su plugin para Vite (`@tailwindcss/vite`):
+
+- `src/styles/app.css` importa Tailwind y define la paleta verde de la marca con `@theme`.
+- El diseño se escribe con clases de utilidad en los componentes (por ejemplo `grid`, `flex`, `rounded-xl`, `bg-verde-600`).
+- Se usan variantes responsivas (`sm:`, `md:`, `lg:`) para adaptar el sitio a celulares y escritorio.
+- `src/estilos.js` agrupa las clases que se repiten (botones, tarjetas y campos) para mantener un diseño consistente.
 
 ## Estructura del proyecto
 
@@ -32,34 +57,38 @@ Se usa `HashRouter` (rutas con `#`, por ejemplo `/#/quienes-somos`) para que el 
 ├── package.json
 ├── vite.config.js
 └── src/
-    ├── main.jsx                  Punto de entrada y HashRouter
-    ├── App.jsx                   Rutas
-    ├── utils.js                  Formato de precio y estado del stock
-    ├── data/productos.js         Datos iniciales del inventario
-    ├── hooks/useInventario.js    Estado del inventario (useState + useEffect)
+    ├── main.jsx                    Punto de entrada y HashRouter
+    ├── App.jsx                     Rutas + ArticulosProvider
+    ├── estilos.js                  Clases de Tailwind reutilizables
+    ├── utils.js                    Formato de precio y estado del stock
+    ├── context/ArticulosContext.jsx Estado global (Context + useReducer)
+    ├── hooks/useArticulos.js        Hook para usar el estado global
+    ├── data/articulos.js            Artículos y tipos iniciales
     ├── components/
-    │   ├── Layout.jsx            Estructura común con <Outlet />
-    │   ├── Encabezado.jsx        Barra superior
-    │   ├── MenuInferior.jsx      Menú inferior con NavLink
-    │   ├── ResumenInventario.jsx Tarjetas de resumen
-    │   ├── TablaInventario.jsx   Tabla de productos
-    │   └── FormularioProducto.jsx Formulario para agregar
+    │   ├── Layout.jsx               Estructura común con <Outlet />
+    │   ├── Encabezado.jsx           Barra superior
+    │   ├── MenuSuperior.jsx         Menú nuevo (agregar y listar artículos)
+    │   ├── MenuInferior.jsx         Menú inferior
+    │   ├── ResumenInventario.jsx    Tarjetas de resumen
+    │   ├── TablaArticulos.jsx       Tabla de artículos
+    │   └── FormularioArticulo.jsx   Formulario con validación
     ├── pages/
     │   ├── Inicio.jsx
+    │   ├── AgregarArticulo.jsx
+    │   ├── Articulos.jsx
     │   ├── QuienesSomos.jsx
     │   ├── PreguntasFrecuentes.jsx
     │   └── NoEncontrada.jsx
-    └── styles/app.css            Estilos propios sobre Bootstrap
+    └── styles/app.css               Tailwind y colores de la marca
 ```
 
-## Funcionalidades del inventario
+## Cómo probar las funcionalidades
 
-- **Resumen:** cantidad de productos, unidades en stock, valor total y productos con stock bajo.
-- **Búsqueda y filtro** por nombre y por categoría.
-- **Stock:** botones − y + en cada producto (el stock nunca baja de 0).
-- **Estados:** *Disponible*, *Stock bajo* (igual o menor al mínimo) y *Agotado* (0 unidades).
-- **Agregar** productos con validación de campos y **eliminar** productos.
-- Los cambios se guardan en el navegador (no se pierden al recargar ni al cambiar de página). **Restablecer inventario** vuelve a los datos iniciales.
+1. Entra a **Agregar artículo** (menú superior), envía el formulario vacío y revisa los mensajes de error.
+2. Completa nombre, marca, tipo, precio y stock, y pulsa **Guardar artículo**: el sitio te lleva a la tabla y el artículo aparece al final.
+3. En **Artículos**, busca por nombre o marca, filtra por tipo, suma o resta stock y elimina artículos.
+4. Vuelve a **Inicio** (menú inferior): el resumen refleja los cambios.
+5. Recarga la página: los datos se mantienen. **Restablecer inventario** vuelve a los datos iniciales.
 
 ## Instalación y uso
 
@@ -81,8 +110,8 @@ npm run preview    # prueba la versión de producción
 
 ## Trabajo colaborativo con Git
 
-El repositorio se comparte con el docente desde **Settings → Collaborators** (o con el enlace, al ser público). El historial de commits muestra cada etapa del desarrollo: configuración inicial, React Router y páginas, e inventario.
+El repositorio se comparte con el docente desde **Settings → Collaborators** (o con el enlace, al ser público). El historial de commits muestra la evolución del proyecto: configuración inicial, React Router, inventario, migración a Tailwind, estado global y las nuevas páginas.
 
 ## Tecnologías
 
-React 19 · React Router 7 · Vite · Bootstrap 5.3 · Bootstrap Icons · JavaScript (ES6)
+React 19 · React Router 7 · Context API + useReducer · Tailwind CSS 4 · Vite · Bootstrap Icons · JavaScript (ES6)
