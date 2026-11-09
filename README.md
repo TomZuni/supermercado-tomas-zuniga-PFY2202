@@ -1,9 +1,9 @@
 # Supermercado Central – Gestión de inventario
 
-**Curso:** Desarrollo Frontend II (PFY2202) · Duoc UC
-**Actividades:** Formativa 1 (React Router) y Formativa 2 (gestión de estado y framework CSS)
-**Alumno:** Tomás Zúñiga
-**Repositorio:** `supermercado-tomas-zuniga-PFY2202`
+- **Curso:** Desarrollo Frontend II (PFY2202) · Duoc UC
+- **Actividades:** Formativa 1 (React Router) y Formativa 2 (gestión de estado y framework CSS)
+- **Alumno:** Tomás Zúñiga
+- **Repositorio:** `supermercado-tomas-zuniga-PFY2202`
 
 Sitio web de gestión de inventario para un supermercado, hecho con **React**, **React Router**, **estado global con Context API** y **Tailwind CSS**.
 
@@ -57,13 +57,16 @@ Se usa **Tailwind CSS 4** con su plugin para Vite (`@tailwindcss/vite`):
 ├── package.json
 ├── vite.config.js
 └── src/
-    ├── main.jsx                    Punto de entrada y HashRouter
-    ├── App.jsx                     Rutas + ArticulosProvider
-    ├── estilos.js                  Clases de Tailwind reutilizables
-    ├── utils.js                    Formato de precio y estado del stock
-    ├── context/ArticulosContext.jsx Estado global (Context + useReducer)
-    ├── hooks/useArticulos.js        Hook para usar el estado global
-    ├── data/articulos.js            Artículos y tipos iniciales
+    ├── main.jsx                     Punto de entrada y HashRouter
+    ├── App.jsx                      Rutas + ArticulosProvider
+    ├── estilos.js                   Clases de Tailwind reutilizables
+    ├── utils.js                     Formato de precio y estado del stock
+    ├── context/
+    │   └── ArticulosContext.jsx     Estado global (Context + useReducer)
+    ├── hooks/
+    │   └── useArticulos.js          Hook para usar el estado global
+    ├── data/
+    │   └── articulos.js             Artículos y tipos iniciales
     ├── components/
     │   ├── Layout.jsx               Estructura común con <Outlet />
     │   ├── Encabezado.jsx           Barra superior
@@ -73,13 +76,14 @@ Se usa **Tailwind CSS 4** con su plugin para Vite (`@tailwindcss/vite`):
     │   ├── TablaArticulos.jsx       Tabla de artículos
     │   └── FormularioArticulo.jsx   Formulario con validación
     ├── pages/
-    │   ├── Inicio.jsx
-    │   ├── AgregarArticulo.jsx
-    │   ├── Articulos.jsx
+    │   ├── Inicio.jsx               Panel con resumen
+    │   ├── AgregarArticulo.jsx      Formulario para agregar
+    │   ├── Articulos.jsx            Tabla de artículos
     │   ├── QuienesSomos.jsx
     │   ├── PreguntasFrecuentes.jsx
-    │   └── NoEncontrada.jsx
-    └── styles/app.css               Tailwind y colores de la marca
+    │   └── NoEncontrada.jsx         Ruta comodín (404)
+    └── styles/
+        └── app.css                  Tailwind y colores de la marca
 ```
 
 ## Cómo probar las funcionalidades
