@@ -1,5 +1,5 @@
-// Hook para usar el estado global de artículos en cualquier componente:
-//   const { articulos, agregarArticulo, eliminarArticulo, cambiarStock, restablecer } = useArticulos()
+// Hook para usar el estado global (inventario y carrito) en cualquier componente:
+//   const { articulos, carrito, agregarAlCarrito, ... } = useArticulos()
 import { useContext } from 'react'
 import { ArticulosContext } from '../context/ArticulosContext.jsx'
 
