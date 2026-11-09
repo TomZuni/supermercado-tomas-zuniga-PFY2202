@@ -129,16 +129,6 @@ npm run build      # genera la carpeta dist para producción
 npm run preview    # prueba la versión de producción
 ```
 
-## Publicar en GitHub Pages
-
-1. Sube el código a la rama `main` del repositorio público.
-2. Ejecuta `npm run deploy`: compila el proyecto y sube la carpeta `dist` a la rama `gh-pages`.
-3. En GitHub: **Settings → Pages → Branch: `gh-pages` / `/ (root)`** y guarda.
-4. El sitio queda en `https://TU-USUARIO.github.io/supermercado-tomas-zuniga-PFY2202/`.
-
-## Trabajo colaborativo con Git
-
-El repositorio se comparte con el docente desde **Settings → Collaborators** (o con el enlace, al ser público). El historial de commits muestra la evolución del proyecto: configuración inicial, React Router, inventario, migración a Tailwind, estado global, carrito, filtro por categoría y detalle de artículo.
 
 ## Tecnologías
 
