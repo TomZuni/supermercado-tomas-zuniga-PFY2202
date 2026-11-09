@@ -1,7 +1,7 @@
 // Estructura común de todas las páginas.
 // <Outlet /> es el lugar donde React Router dibuja la página de la ruta actual.
 import { useEffect } from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation, matchPath } from 'react-router-dom'
 import Encabezado from './Encabezado.jsx'
 import MenuInferior from './MenuInferior.jsx'
 
@@ -9,6 +9,7 @@ import MenuInferior from './MenuInferior.jsx'
 const TITULOS = {
   '/': 'Inicio',
   '/articulos': 'Artículos',
+  '/carrito': 'Carrito',
   '/agregar-articulo': 'Agregar artículo',
   '/quienes-somos': 'Quiénes somos',
   '/preguntas-frecuentes': 'Preguntas frecuentes',
@@ -20,7 +21,9 @@ export default function Layout() {
   // Cada vez que cambia la ruta: se sube al inicio de la página y se actualiza el título.
   useEffect(() => {
     window.scrollTo(0, 0)
-    document.title = `${TITULOS[pathname] ?? 'Página no encontrada'} | Supermercado Central`
+    const esDetalle = matchPath('/articulos/:id', pathname) // detalle de un artículo
+    const titulo = esDetalle ? 'Detalle del artículo' : TITULOS[pathname] ?? 'Página no encontrada'
+    document.title = `${titulo} | Supermercado Central`
   }, [pathname])
 
   return (

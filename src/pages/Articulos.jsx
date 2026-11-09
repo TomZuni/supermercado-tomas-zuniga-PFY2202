@@ -1,39 +1,49 @@
 // Página que LISTA en una tabla todos los artículos del inventario.
 // Los datos vienen del estado global (useArticulos). Aquí solo viven los filtros.
+//
+// FILTRO POR CATEGORÍA: la lista original (articulos) nunca se modifica.
+// En cada render se calcula una lista nueva (filtrados) a partir de ella; así,
+// al cambiar de categoría o de búsqueda no se pierden los datos del inventario.
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import TablaArticulos from '../components/TablaArticulos.jsx'
+import FiltroCategorias from '../components/FiltroCategorias.jsx'
 import useArticulos from '../hooks/useArticulos.js'
-import { TIPOS } from '../data/articulos.js'
 import { boton, botonSecundario, campo, tarjeta } from '../estilos.js'
 
 export default function Articulos() {
   const { articulos, eliminarArticulo, cambiarStock, restablecer } = useArticulos()
   const [busqueda, setBusqueda] = useState('')
-  const [tipo, setTipo] = useState('Todos')
+  const [categoria, setCategoria] = useState('Todas')
   const [avisoCerrado, setAvisoCerrado] = useState(false)
 
   // Si se llegó desde "Agregar artículo", el router entrega el nombre del artículo nuevo.
   const { state } = useLocation()
   const agregado = state?.agregado
 
+  // Categorías que existen hoy en el inventario, con la cantidad de artículos de cada una.
+  const nombres = [...new Set(articulos.map((a) => a.tipo))]
+  const categorias = [
+    { nombre: 'Todas', cantidad: articulos.length },
+    ...nombres.map((nombre) => ({ nombre, cantidad: articulos.filter((a) => a.tipo === nombre).length })),
+  ]
+  // Si la categoría elegida ya no existe (por ejemplo, se eliminó su último artículo), se vuelve a "Todas".
+  const categoriaActiva = categorias.some((c) => c.nombre === categoria) ? categoria : 'Todas'
+
   // Datos derivados: la lista que se muestra depende de los filtros.
   const texto = busqueda.trim().toLowerCase()
   const filtrados = articulos.filter(
     (a) =>
-      (a.nombre.toLowerCase().includes(texto) || a.marca.toLowerCase().includes(texto)) &&
-      (tipo === 'Todos' || a.tipo === tipo),
+      (categoriaActiva === 'Todas' || a.tipo === categoriaActiva) &&
+      (a.nombre.toLowerCase().includes(texto) || a.marca.toLowerCase().includes(texto)),
   )
-
-  // Los tipos del filtro incluyen los de la lista base y cualquier otro que se haya usado.
-  const tipos = [...new Set([...TIPOS, ...articulos.map((a) => a.tipo)])]
 
   return (
     <section aria-labelledby="tituloArticulos">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 id="tituloArticulos" className="text-2xl font-bold">Artículos del inventario</h1>
-          <p className="text-slate-600">Todos los artículos disponibles en el supermercado.</p>
+          <p className="text-slate-600">Filtra por categoría y toca un artículo para ver su detalle.</p>
         </div>
         <Link to="/agregar-articulo" className={boton}>
           <i className="bi bi-plus-circle" aria-hidden="true"></i> Agregar artículo
@@ -49,18 +59,11 @@ export default function Articulos() {
       )}
 
       <div className={tarjeta}>
-        <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_14rem]">
-          <div>
-            <label htmlFor="busqueda" className="sr-only">Buscar artículo</label>
-            <input id="busqueda" type="search" className={campo(false)} placeholder="Buscar por nombre o marca..." value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
-          </div>
-          <div>
-            <label htmlFor="filtroTipo" className="sr-only">Filtrar por tipo</label>
-            <select id="filtroTipo" className={campo(false)} value={tipo} onChange={(e) => setTipo(e.target.value)}>
-              <option value="Todos">Todos los tipos</option>
-              {tipos.map((t) => <option key={t} value={t}>{t}</option>)}
-            </select>
-          </div>
+        <FiltroCategorias categorias={categorias} activa={categoriaActiva} onCambiar={setCategoria} />
+
+        <div className="mt-4 mb-3">
+          <label htmlFor="busqueda" className="sr-only">Buscar artículo</label>
+          <input id="busqueda" type="search" className={campo(false)} placeholder="Buscar por nombre o marca..." value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
         </div>
 
         <p className="mb-2 text-sm text-slate-500" aria-live="polite">
